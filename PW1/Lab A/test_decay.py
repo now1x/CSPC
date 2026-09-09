@@ -17,13 +17,16 @@ def test_starts_at_N0():
 
 
 def test_nrejects_negative_rate():
+    # a negative decay rate is not possible, so the function should
+    # raise a ValueError if lam < 0
     with pytest.raises(ValueError):
         decay.simulate(1000, -0.4)
 
 def test_matches_law():
+    # the average of many simulations should match the analytical law
     N0, lam = 10000, 0.4
     dt = 0.05
     avg = np.mean([decay.simulate(N0, lam, dt=dt) for _ in range(200)], axis=0)
     t = np.arange(len(avg)) * dt
     expected = N0 * np.exp(-lam * t)
-    assert avg == pytest.approx(expected, rel=0.15)
+    assert avg == pytest.approx(expected, rel=0.15) # allowed 15% relative error, 5% was too strict and gave out an error 
