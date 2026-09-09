@@ -13,7 +13,8 @@ Both return an array of the atom count at each time step.
 """
 
 import numpy as np
-
+import pytest
+import decay
 
 def simulate_loop(N0, lam, dt=0.05, steps=200, seed=0):
     """Radioactive decay, pure-Python loop version (slow)."""
@@ -44,3 +45,14 @@ def simulate(N0, lam, dt=0.05, steps=200, seed=0):
         N -= decayed
         counts.append(N)
     return np.array(counts)
+
+def test_negative_rate_raises_value_error():
+    with pytest.raises(ValueError):
+        decay.simulate(1000, -0.4)
+
+def test_matches_analytical_law():
+    N0, lam = 10000, 0.4
+    avg = np.mean([simulate(N0, lam) for _ in range(200)], axis=0)
+    t = np.arange(len(avg))
+    expected = N0 * np.exp(-lam * t)
+    assert avg == pytest.approx(expected, rel=0.05)
