@@ -16,7 +16,7 @@ def test_starts_at_N0():
     assert decay.simulate(1000, 0.4)[0] == 1000
 
 
-def test_nrejects_negative_rate():
+def test_rejects_negative_rate():
     # a negative decay rate is not possible, so the function should
     # raise a ValueError if lam < 0
     with pytest.raises(ValueError):
