@@ -52,4 +52,5 @@ coverage.xml
 figure.png
 
 # Snakemake
-.snakemake/
+.snakemake
+*.sh
